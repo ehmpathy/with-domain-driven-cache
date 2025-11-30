@@ -1,3 +1,6 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "terraform.languageServer.enable": false,
+  "eslint.enable": true,
+  "yaml.validate": false,
+  "cSpell.enabled": false
 }

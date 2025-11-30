@@ -1,5 +1,5 @@
 import { DomainEntity, DomainLiteral } from 'domain-objects';
-import { SimpleAsyncCache } from 'with-simple-caching';
+import { SimpleAsyncCache } from 'with-simple-cache';
 
 import { ref } from './ref/ref';
 import { withMutationEffects } from './withMutationEffects';

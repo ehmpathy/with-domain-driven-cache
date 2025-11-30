@@ -7,7 +7,7 @@
     "noUnusedParameters": false,
     "exactOptionalPropertyTypes": false,
     "noImplicitOverride": false,
-    "noUncheckedIndexedAccess": false, // todo: fix cross-sha256
+    "noUncheckedIndexedAccess": false,
     "resolveJsonModule": true,
     "sourceMap": true,
     "outDir": "dist",

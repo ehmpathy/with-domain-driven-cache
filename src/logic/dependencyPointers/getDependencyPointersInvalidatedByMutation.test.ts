@@ -1,6 +1,6 @@
 import { DomainEntity, DomainLiteral } from 'domain-objects';
 import { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
-import { SimpleAsyncCache } from 'with-simple-caching';
+import { SimpleAsyncCache } from 'with-simple-cache';
 
 import { getDependencyPointersInvalidatedByMutation } from './getDependencyPointersInvalidatedByMutation';
 

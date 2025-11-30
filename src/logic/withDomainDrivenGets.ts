@@ -4,7 +4,7 @@ import {
   withSerialization,
 } from 'with-cache-normalization';
 import { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
-import { SimpleCache } from 'with-simple-caching';
+import { SimpleAsyncCache, SimpleCache } from 'with-simple-cache';
 
 /**
  * a method which makes it easy to get from a domain-driven cache, without access to the query logic itself
@@ -18,6 +18,6 @@ import { SimpleCache } from 'with-simple-caching';
  * - accessing outputs .set by a lambda server, at the lambda client (e.g., with [simple-lambda-client](https://github.com/ehmpathy/simple-lambda-client))
  */
 export const withDomainDrivenGets = <T extends SerializableObject>(
-  cache: SimpleCache<string>,
+  cache: SimpleAsyncCache<string>,
 ): SimpleCache<T> =>
   withoutSet(withDenormalization(withSerialization<T>(cache)));

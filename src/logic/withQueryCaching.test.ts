@@ -1,6 +1,6 @@
 import { DomainEntity } from 'domain-objects';
 import { getSimpleLambdaClientCacheKey } from 'simple-lambda-client';
-import { SimpleAsyncCache } from 'with-simple-caching';
+import { SimpleAsyncCache } from 'with-simple-cache';
 
 import { uuid } from '../deps';
 import { ref } from './ref/ref';

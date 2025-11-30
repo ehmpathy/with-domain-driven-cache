@@ -1,5 +1,5 @@
 import { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
-import { SimpleAsyncCache } from 'with-simple-caching';
+import { SimpleAsyncCache } from 'with-simple-cache';
 
 import { sleep } from '../../utils/sleep';
 import { invalidateQueriesByDependencyPointer } from './invalidateQueriesByDependencyPointer';

@@ -2,7 +2,7 @@ import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
 import Bottleneck from 'bottleneck';
 import { createCache } from 'simple-in-memory-cache';
 import { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
-import { SimpleAsyncCache, withSimpleCaching } from 'with-simple-caching';
+import { SimpleAsyncCache, withSimpleCache } from 'with-simple-cache';
 
 export const isValidPointerState = (
   state: SerializableObject,
@@ -21,9 +21,9 @@ export const isValidPointerState = (
  * purpose
  * - prevent parallel writes from the same machine to the same queryKey store for a given pointer
  */
-const getConcurrencyBottleneckForPointer = withSimpleCaching(
+const getConcurrencyBottleneckForPointer = withSimpleCache(
   ({}: { pointer: string }) => new Bottleneck({ maxConcurrent: 1 }),
-  { cache: createCache({ defaultSecondsUntilExpiration: Infinity }) },
+  { cache: createCache({ expiration: { seconds: Infinity } }) },
 );
 
 /**
@@ -81,7 +81,7 @@ export const addQueryKeyToDependencyPointer = async ({
         pointer,
         { queries: [queryKey] },
         {
-          secondsUntilExpiration: Infinity, // never expire these -> may lead to stale cached data otherwise
+          expiration: { seconds: Infinity }, // never expire these -> may lead to stale cached data otherwise
         },
       );
     }
@@ -97,7 +97,7 @@ export const addQueryKeyToDependencyPointer = async ({
         queries: [...stateBefore.queries, queryKey],
       },
       {
-        secondsUntilExpiration: Infinity, // never expire these -> may lead to stale cached data otherwise
+        expiration: { seconds: Infinity }, // never expire these -> may lead to stale cached data otherwise
       },
     );
   });

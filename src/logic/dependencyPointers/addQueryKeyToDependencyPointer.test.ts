@@ -5,7 +5,7 @@ import {
   withSerialization,
 } from 'with-cache-normalization';
 import { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
-import { SimpleAsyncCache } from 'with-simple-caching';
+import { SimpleAsyncCache } from 'with-simple-cache';
 
 import { sleep } from '../../utils/sleep';
 import {
@@ -42,7 +42,7 @@ describe('addQueryKeyToDependencyPointer', () => {
     expect(cacheSetMock).toHaveBeenCalledWith(
       pointer,
       { queries: [queryKey] },
-      { secondsUntilExpiration: Infinity },
+      { expiration: { seconds: Infinity } },
     );
   });
   it('should correctly set updated state for an existing pointer', async () => {
@@ -61,12 +61,12 @@ describe('addQueryKeyToDependencyPointer', () => {
     expect(cacheSetMock).toHaveBeenCalledWith(
       pointer,
       { queries: ['query.1'] },
-      { secondsUntilExpiration: Infinity },
+      { expiration: { seconds: Infinity } },
     );
     expect(cacheSetMock).toHaveBeenCalledWith(
       pointer,
       { queries: ['query.1', 'query.2'] },
-      { secondsUntilExpiration: Infinity },
+      { expiration: { seconds: Infinity } },
     );
   });
   it('should not set duplicate query reference for a repeat query<->pointer relationship', async () => {
@@ -86,7 +86,7 @@ describe('addQueryKeyToDependencyPointer', () => {
     expect(cacheSetMock).toHaveBeenCalledWith(
       pointer,
       { queries: [queryKey] },
-      { secondsUntilExpiration: Infinity },
+      { expiration: { seconds: Infinity } },
     );
   });
   it('should not loose information when concurrent writes are requested', async () => {
@@ -129,7 +129,7 @@ describe('addQueryKeyToDependencyPointer', () => {
     expect(cacheSetMock).toHaveBeenCalledWith(
       pointer,
       JSON.stringify({ queries: [queryKey] }),
-      { secondsUntilExpiration: Infinity },
+      { expiration: { seconds: Infinity } },
     );
   });
 });

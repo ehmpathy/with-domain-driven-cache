@@ -9,7 +9,7 @@ on:
 
 jobs:
   npm:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     outputs:
       node-modules-cache-key: ${{ steps.cache.outputs.cache-primary-key }}
     steps:
@@ -19,7 +19,7 @@ jobs:
       - name: set node-version
         uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
 
       - name: node-modules deps hash
         id: deps-hash

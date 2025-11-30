@@ -64,7 +64,7 @@ const getContainersOnShip = async ({
 };
 
 const cache = createCache({
-  directoryToPersistTo: { mounted: { path: `${__dirname}/__tmp__` } },
+  directory: { mounted: { path: `${__dirname}/__tmp__` } },
 });
 
 describe('withQueryCaching', () => {
