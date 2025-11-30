@@ -1,6 +1,6 @@
 import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
-import { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
-import { SimpleAsyncCache } from 'with-simple-caching';
+import type { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
+import type { SimpleAsyncCache } from 'with-simple-cache';
 
 import { isValidPointerState } from './addQueryKeyToDependencyPointer';
 

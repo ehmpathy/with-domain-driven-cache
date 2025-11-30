@@ -1,8 +1,8 @@
 import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
 import Bottleneck from 'bottleneck';
 import { createCache } from 'simple-in-memory-cache';
-import { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
-import { SimpleAsyncCache, withSimpleCaching } from 'with-simple-caching';
+import type { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
+import { type SimpleAsyncCache, withSimpleCache } from 'with-simple-cache';
 
 export const isValidPointerState = (
   state: SerializableObject,
@@ -21,9 +21,9 @@ export const isValidPointerState = (
  * purpose
  * - prevent parallel writes from the same machine to the same queryKey store for a given pointer
  */
-const getConcurrencyBottleneckForPointer = withSimpleCaching(
-  ({}: { pointer: string }) => new Bottleneck({ maxConcurrent: 1 }),
-  { cache: createCache({ defaultSecondsUntilExpiration: Infinity }) },
+const getConcurrencyBottleneckForPointer = withSimpleCache(
+  (_: { pointer: string }) => new Bottleneck({ maxConcurrent: 1 }),
+  { cache: createCache({ expiration: { seconds: Infinity } }) },
 );
 
 /**
@@ -70,7 +70,7 @@ export const addQueryKeyToDependencyPointer = async ({
     // if the state before did not exist or was corrupt, overwrite it
     if (!isValidPointerState(stateBefore)) {
       // if the data was corrupt, fail fast, since that means something is corrupting the pointer state and cache will have stale data
-      if (!!stateBefore)
+      if (stateBefore)
         throw new UnexpectedCodePathError(
           'detected corrupt $query.ref dependency.pointer state. stale cache data may exist',
           { pointer, stateBefore },
@@ -81,7 +81,7 @@ export const addQueryKeyToDependencyPointer = async ({
         pointer,
         { queries: [queryKey] },
         {
-          secondsUntilExpiration: Infinity, // never expire these -> may lead to stale cached data otherwise
+          expiration: { seconds: Infinity }, // never expire these -> may lead to stale cached data otherwise
         },
       );
     }
@@ -97,7 +97,7 @@ export const addQueryKeyToDependencyPointer = async ({
         queries: [...stateBefore.queries, queryKey],
       },
       {
-        secondsUntilExpiration: Infinity, // never expire these -> may lead to stale cached data otherwise
+        expiration: { seconds: Infinity }, // never expire these -> may lead to stale cached data otherwise
       },
     );
   });

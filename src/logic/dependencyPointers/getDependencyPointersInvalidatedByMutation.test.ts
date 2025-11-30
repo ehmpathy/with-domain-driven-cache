@@ -1,6 +1,6 @@
 import { DomainEntity, DomainLiteral } from 'domain-objects';
-import { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
-import { SimpleAsyncCache } from 'with-simple-caching';
+import type { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
+import type { SimpleAsyncCache } from 'with-simple-cache';
 
 import { getDependencyPointersInvalidatedByMutation } from './getDependencyPointersInvalidatedByMutation';
 
@@ -53,9 +53,9 @@ const container = new Container({
 describe('getDependencyPointersInvalidatedByMutation', () => {
   const exampleStore: Record<string, any> = {};
   const cacheGetMock = jest.fn(async (key) => exampleStore[key]);
-  const cacheSetMock = jest.fn(
-    async (key, value) => (exampleStore[key] = value),
-  );
+  const cacheSetMock = jest.fn(async (key, value) => {
+    exampleStore[key] = value;
+  });
   const cache: SimpleAsyncCache<SerializableObject> = {
     get: cacheGetMock,
     set: cacheSetMock,

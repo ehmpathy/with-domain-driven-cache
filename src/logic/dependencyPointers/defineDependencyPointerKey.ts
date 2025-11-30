@@ -1,11 +1,11 @@
-import { sha256 } from 'cross-sha256';
 import {
   DomainEntity,
   DomainLiteral,
   getUniqueIdentifierSlug,
 } from 'domain-objects';
-import { PickOne } from 'type-fns';
-import { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
+import { asHashSha256Sync } from 'hash-fns';
+import type { PickOne } from 'type-fns';
+import type { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
 
 const serializePropertyValue = (value: SerializableObject) => {
   // if it is a domain object, get its unique identifier
@@ -13,12 +13,12 @@ const serializePropertyValue = (value: SerializableObject) => {
     value instanceof DomainEntity || value instanceof DomainLiteral;
   if (isDomainIdentifiable) return getUniqueIdentifierSlug(value);
 
-  // otherwise, must use JSON.stringify, to avoid getting things like `[ Object: object ]`; however, must be filePathSafe, so cross-sha hash and include human part
+  // otherwise, must use JSON.stringify, to avoid getting things like `[ Object: object ]`; however, must be filePathSafe, so hash and include human part
   const humanPart = JSON.stringify(value)
     .replace(/:/g, '.')
-    .replace(/[^\w\-\_]/g, '')
+    .replace(/[^\w\-_]/g, '')
     .replace(/\.\./g, '.');
-  const uniquePart = new sha256().update(JSON.stringify(value)).digest('hex'); // part to guarantee uniqueness
+  const uniquePart = asHashSha256Sync(JSON.stringify(value)); // part to guarantee uniqueness
   return [humanPart, uniquePart].join('.');
 };
 

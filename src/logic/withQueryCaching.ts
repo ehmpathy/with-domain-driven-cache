@@ -3,11 +3,10 @@ import {
   withNormalization,
   withSerialization,
 } from 'with-cache-normalization';
-import { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
-import { SimpleCache } from 'with-simple-caching';
-
-import { DomainDrivenQueryDependsOn } from '../domain/DomainDrivenQueryDependsOn';
-import { LogMethod } from '../domain/constants';
+import type { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
+import type { SimpleCache } from 'with-simple-cache';
+import type { LogMethod } from '../domain/constants';
+import type { DomainDrivenQueryDependsOn } from '../domain/DomainDrivenQueryDependsOn';
 import { addQueryKeyToDependencyPointer } from './dependencyPointers/addQueryKeyToDependencyPointer';
 import { getDependencyPointersDependedOnByQuery } from './dependencyPointers/getDependencyPointersDependedOnByQuery';
 
@@ -134,7 +133,9 @@ export const withQueryCaching = <I extends any[], O extends SerializableObject>(
 
     // set the value to the cache
     await cache.set(key, output, {
-      secondsUntilExpiration: options.secondsUntilExpiration,
+      expiration: options.secondsUntilExpiration
+        ? { seconds: options.secondsUntilExpiration }
+        : undefined,
     });
     if (options.logDebug)
       options.logDebug('ddcache.query.set', { key, deps: pointers });

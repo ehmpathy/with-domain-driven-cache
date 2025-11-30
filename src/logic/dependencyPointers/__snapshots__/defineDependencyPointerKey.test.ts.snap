@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`defineDependencyPointerKey should be able to define the dependency pointer key for a relationship from entity with foreign key on *source* entity 1`] = `".query.dep.Container.uuid.__uuid__.onShipUuid"`;
 

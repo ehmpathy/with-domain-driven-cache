@@ -1,4 +1,4 @@
-import { PickOne } from 'type-fns';
+import type { PickOne } from 'type-fns';
 
 /**
  * defines a dependency of a domain.logic.query

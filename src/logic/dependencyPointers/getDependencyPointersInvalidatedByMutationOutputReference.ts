@@ -1,12 +1,12 @@
 import {
   DomainEntity,
-  DomainObject,
+  type DomainObject,
   getUpdatableProperties,
   omitMetadataValues,
   serialize,
 } from 'domain-objects';
-import { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
-import { SimpleAsyncCache } from 'with-simple-caching';
+import type { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
+import type { SimpleAsyncCache } from 'with-simple-cache';
 
 import { defineDependencyPointerKey } from './defineDependencyPointerKey';
 
@@ -82,51 +82,49 @@ export const getDependencyPointersInvalidatedByMutationOutputReference =
         );
 
     // for each property that was updated, define dependency pointers for it (both one from the entity + one to the value)
-    const pointers = dobjPropertiesImpacted
-      .map((propertyKey) => {
-        // define the pointer based on the entity identity
-        if (!('uuid' in dobjReferenced))
-          throw new UndefinableDomainEntityPropertyDependencyInvalidationError({
-            referenceKey,
-            referencedDobj: dobjReferenced,
-          });
-        const fromIdentityPointer = defineDependencyPointerKey({
+    const pointers = dobjPropertiesImpacted.flatMap((propertyKey) => {
+      // define the pointer based on the entity identity
+      if (!('uuid' in dobjReferenced))
+        throw new UndefinableDomainEntityPropertyDependencyInvalidationError({
+          referenceKey,
+          referencedDobj: dobjReferenced,
+        });
+      const fromIdentityPointer = defineDependencyPointerKey({
+        dobj: dobjReferenced.constructor.name,
+        property: propertyKey,
+        specifier: { propertyOf: { uuid: dobjReferenced.uuid as string } },
+      });
+
+      // define the pointer based on the old property value
+      const propertyValueOld = dobjCached?.[propertyKey];
+      const propertyValueOldArray = propertyValueOld
+        ? Array.isArray(propertyValueOld)
+          ? propertyValueOld
+          : [propertyValueOld]
+        : [];
+      const propertyValueNew = (
+        dobjReferenced as Record<string, SerializableObject>
+      )[propertyKey];
+      const propertyValueNewArray = Array.isArray(propertyValueNew)
+        ? propertyValueNew
+        : [propertyValueNew];
+      const propertyValueMergedArray: SerializableObject[] = [
+        ...propertyValueOldArray,
+        ...propertyValueNewArray,
+      ];
+      const toValuePointers = propertyValueMergedArray.map((thisValue) =>
+        defineDependencyPointerKey({
           dobj: dobjReferenced.constructor.name,
           property: propertyKey,
-          specifier: { propertyOf: { uuid: dobjReferenced.uuid as string } },
-        });
+          specifier: {
+            propertyEquals: { value: thisValue },
+          },
+        }),
+      );
 
-        // define the pointer based on the old property value
-        const propertyValueOld = dobjCached?.[propertyKey];
-        const propertyValueOldArray = propertyValueOld
-          ? Array.isArray(propertyValueOld)
-            ? propertyValueOld
-            : [propertyValueOld]
-          : [];
-        const propertyValueNew = (
-          dobjReferenced as Record<string, SerializableObject>
-        )[propertyKey];
-        const propertyValueNewArray = Array.isArray(propertyValueNew)
-          ? propertyValueNew
-          : [propertyValueNew];
-        const propertyValueMergedArray: SerializableObject[] = [
-          ...propertyValueOldArray,
-          ...propertyValueNewArray,
-        ];
-        const toValuePointers = propertyValueMergedArray.map((thisValue) =>
-          defineDependencyPointerKey({
-            dobj: dobjReferenced.constructor.name,
-            property: propertyKey,
-            specifier: {
-              propertyEquals: { value: thisValue },
-            },
-          }),
-        );
-
-        // return all of the pointers
-        return [fromIdentityPointer, ...toValuePointers];
-      })
-      .flat();
+      // return all of the pointers
+      return [fromIdentityPointer, ...toValuePointers];
+    });
 
     // return all of the pointers affected
     return [...new Set(pointers)]; // dedupe them before returning

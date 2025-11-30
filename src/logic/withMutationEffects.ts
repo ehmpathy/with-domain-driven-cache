@@ -2,10 +2,10 @@ import {
   normalizeDomainObjectReferences,
   withSerialization,
 } from 'with-cache-normalization';
-import { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
-import { SimpleCache } from 'with-simple-caching';
+import type { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
+import type { SimpleCache } from 'with-simple-cache';
 
-import { LogMethod } from '../domain/constants';
+import type { LogMethod } from '../domain/constants';
 import { getDependencyPointersInvalidatedByMutation } from './dependencyPointers/getDependencyPointersInvalidatedByMutation';
 import { invalidateQueriesByDependencyPointer } from './dependencyPointers/invalidateQueriesByDependencyPointer';
 import { DEFAULT_REFERENCE_SECONDS_UNTIL_EXPIRATION } from './withQueryCaching';
@@ -66,7 +66,7 @@ export const withMutationEffects = <
     await Promise.all(
       Object.entries(references).map(([refKey, refDobj]) =>
         cache.set(refKey, refDobj, {
-          secondsUntilExpiration: DEFAULT_REFERENCE_SECONDS_UNTIL_EXPIRATION,
+          expiration: { seconds: DEFAULT_REFERENCE_SECONDS_UNTIL_EXPIRATION },
         }),
       ),
     );
