@@ -8,7 +8,7 @@ import type { SimpleCache } from 'with-simple-cache';
 import type { LogMethod } from '../domain/constants';
 import { getDependencyPointersInvalidatedByMutation } from './dependencyPointers/getDependencyPointersInvalidatedByMutation';
 import { invalidateQueriesByDependencyPointer } from './dependencyPointers/invalidateQueriesByDependencyPointer';
-import { DEFAULT_REFERENCE_SECONDS_UNTIL_EXPIRATION } from './withQueryCaching';
+import { DEFAULT_REFERENCE_SECONDS_UNTIL_EXPIRATION } from './withQueryCache';
 
 /**
  * adds domain driven cache effects to a domain.logic.mutation

@@ -1,12 +1,12 @@
-# with-domain-driven-caching
+# with-domain-driven-cache
 
-safe 🔭, easy ✨, and powerful ⚡ domain.logic.query caching, via domain.object definitions
+safe 🔭, easy ✨, and powerful ⚡ domain.logic.query cache, via domain.object definitions
 
 # overview
 
-wasting time writing cache updates manually on the frontend? got slow queries due to fan out effects on the backend? want to move faster without adhoc code and data stores?
+waste time to write cache updates manually on the frontend? got slow queries due to fan out effects on the backend? want to move faster without adhoc code and data stores?
 
-safely and easily add [dynamodb](https://github.com/ehmpathy/simple-dynamodb-cache), [s3](https://github.com/ehmpathy/simple-on-disk-cache), [localstorage](https://github.com/ehmpathy/simple-localstorage-cache), or any other performant persistance layer backed caching to any domain.logic.query by leveraging the [domain.object](https://github.com/ehmpathy/domain-objects) definitions you're already writing
+safely and easily add a [dynamodb](https://github.com/ehmpathy/simple-dynamodb-cache), [s3](https://github.com/ehmpathy/simple-on-disk-cache), [localstorage](https://github.com/ehmpathy/simple-localstorage-cache), or any other performant persistance layer backed cache to any domain.logic.query by leverage of the [domain.object](https://github.com/ehmpathy/domain-objects) definitions you already write
 
 features domain driven automation to keep your cache [fresh and clean](https://www.youtube.com/watch?v=-JfEJq56IwI)
 - ⚡ intuitive pit-of-success interface
@@ -18,18 +18,18 @@ features domain driven automation to keep your cache [fresh and clean](https://w
 # install
 
 ```sh
-npm install with-domain-driven-caching
+npm install with-domain-driven-cache
 ```
 
 # use
 
-### ⚡ add caching to a query
+### ⚡ add a cache to a query
 
-easily add caching to any domain.logic.query with the wrapper
+easily add a cache to any domain.logic.query with the wrapper
 
 ```ts
 import { createCache } from 'simple-dynamodb-cache';
-import { withQueryCaching } from 'with-domain-driven-caching';
+import { withQueryCache } from 'with-domain-driven-cache';
 
 // say you want to cache in dynamodb
 const cache = createCache({ table: config.dynamodb.cache });
@@ -37,8 +37,8 @@ const cache = createCache({ table: config.dynamodb.cache });
 // say you have this query
 const getJobByUuid = async ({ uuid }): Promise<Job> => { /* ... */ }
 
-// add caching to it easily, like so
-const cached = withQueryCaching(getJobByUuid, { cache })
+// add a cache to it easily, like so
+const cached = withQueryCache(getJobByUuid, { cache })
 ```
 
 ### ✨ automatically update cache on mutation
@@ -47,8 +47,8 @@ if your query outputs domain objects, you've already got automatic cache updates
 
 for example
 ```ts
-// say you have a query with caching that returns a job by uuid
-const getJobByUuid = withQueryCaching(async ({ uuid }): Promise<Job> => { /* ... */ }, { cache })
+// say you have a query with a cache that returns a job by uuid
+const getJobByUuid = withQueryCache(async ({ uuid }): Promise<Job> => { /* ... */ }, { cache })
 
 // lets lookup the state of a job we know exists
 const jobUuid = '__some_uuid__';
@@ -66,7 +66,7 @@ const jobAfter = await getJobByUuid({ uuid: jobUuid }); // cache.hit -> query.ou
 expect(jobAfter.name).toEqual('Hot Tub Removal')
 ```
 
-this works due to *domain.object dereferencing*
+this works due to *domain.object dereference*
 
 under the hood, whenever a domain.logic.query.output references a domain.object
 - we `.set` the state of the referenced domain.object into its own key in the cache
@@ -78,12 +78,12 @@ under the hood, whenever a domain.logic.query.output references a domain.object
 
 if your domain.logic.query depends on the identities or relationships of domain.objects, you can easily add automatic cache invalidation whenever these dependencies are impacted by a mutation
 
-simply define what your domain.logic.query depends on when adding caching
+simply define what your domain.logic.query depends on when you add a cache
 ```ts
-import { refProperty } from 'with-domain-driven-caching';
+import { refProperty } from 'with-domain-driven-cache';
 
-// say you have this query and caching to it with the relationship dependency defined
-const getJobsByProvider = withQueryCaching(
+// say you have this query and a cache to it with the relationship dependency defined
+const getJobsByProvider = withQueryCache(
   async ({ providerUuid }): Promise<Job[]> => { /* ... */ },
   {
     cache,
@@ -110,7 +110,7 @@ const getJobsByProvider = withQueryCaching(
   })
 ```
 
-this tells the caching mechanism that anytime a the relationship between `provider:@uuid` and `job:any` is changed, the query.output should be invalidated
+this tells the cache mechanism that anytime a the relationship between `provider:@uuid` and `job:any` is changed, the query.output should be invalidated
 
 therefore, when the mutation in the following example is called, the query.output is invalidated automatically
 

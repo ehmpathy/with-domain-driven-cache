@@ -10,7 +10,7 @@ import type { SimpleAsyncCache, SimpleCache } from 'with-simple-cache';
  * a method which makes it easy to get from a domain-driven cache, without access to the query logic itself
  *
  * specifically
- * - adds withoutSet to the cache, since only the withQueryCaching wrapped method should be calling that
+ * - adds withoutSet to the cache, since only the withQueryCache wrapped method should be calling that
  * - adds withSerialization to the cache, to make it compatible with normalization
  * - adds withDenormalization to the cache, to enable it to denormalize the normalized cached query outputs
  *
