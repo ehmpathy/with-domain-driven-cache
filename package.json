@@ -2,7 +2,7 @@
   "name": "with-domain-driven-cache",
   "author": "ehmpathy",
   "description": "A wrapper that makes it simple to add caching to any function",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "repository": "ehmpathy/with-domain-driven-cache",
   "homepage": "https://github.com/ehmpathy/with-domain-driven-cache",
   "keywords": [
