@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/ehmpathy/with-domain-driven-caching/compare/v1.1.3...v1.1.4) (2025-11-30)
+
+
+### Bug Fixes
+
+* **deps:** bump to latest with-simple-cache ([#7](https://github.com/ehmpathy/with-domain-driven-caching/issues/7)) ([b8236c3](https://github.com/ehmpathy/with-domain-driven-caching/commit/b8236c3a76d139a64ec4bb206d388316fdb3200b))
+
 ## [1.1.3](https://github.com/ehmpathy/with-domain-driven-caching/compare/v1.1.2...v1.1.3) (2024-08-01)
 
 
