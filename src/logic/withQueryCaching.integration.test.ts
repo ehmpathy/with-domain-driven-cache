@@ -38,7 +38,7 @@ class Container extends DomainEntity<Container> implements Container {
   public static updatable = ['onShipUuid', 'lock'];
 }
 
-const getShipOfContainer = async ({}: {
+const getShipOfContainer = async (_: {
   containerUuid: string;
 }): Promise<{ ship: Ship }> => {
   const ship = new Ship({

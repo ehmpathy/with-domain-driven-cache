@@ -2,8 +2,8 @@ import { UnexpectedCodePathError } from '@ehmpathy/error-fns';
 import { isPropertyNameAReferenceIntuitively } from 'domain-objects';
 import { isAFunction } from 'type-fns';
 
-import { DomainDrivenQueryDependency } from '../../domain/DomainDrivenQueryDependency';
-import { DomainDrivenQueryDependsOn } from '../../domain/DomainDrivenQueryDependsOn';
+import type { DomainDrivenQueryDependency } from '../../domain/DomainDrivenQueryDependency';
+import type { DomainDrivenQueryDependsOn } from '../../domain/DomainDrivenQueryDependsOn';
 import { defineDependencyPointerKey } from './defineDependencyPointerKey';
 
 export class DependencyRelationshipViaUnintuitivePropertyNameError extends Error {
@@ -61,62 +61,59 @@ export const getDependencyPointersDependedOnByQuery = <I extends any[], O>({
     : dependsOnArrayOrFunction;
 
   // for each dependency, define the pointers
-  const pointers = dependsOn
-    .map((dependency) => {
-      // handle identity dependency
-      if (dependency.identity) {
-        const uuidsOrUuid = dependency.identity.uuid(execution);
-        const uuids = Array.isArray(uuidsOrUuid) ? uuidsOrUuid : [uuidsOrUuid];
-        return uuids.map((uuid) =>
-          defineDependencyPointerKey({
-            dobj: dependency.identity.dobj,
-            property: 'uuid',
-            specifier: { propertyEquals: { value: uuid } },
-          }),
-        );
-      }
+  const pointers = dependsOn.flatMap((dependency) => {
+    // handle identity dependency
+    if (dependency.identity) {
+      const uuidsOrUuid = dependency.identity.uuid(execution);
+      const uuids = Array.isArray(uuidsOrUuid) ? uuidsOrUuid : [uuidsOrUuid];
+      return uuids.map((uuid) =>
+        defineDependencyPointerKey({
+          dobj: dependency.identity.dobj,
+          property: 'uuid',
+          specifier: { propertyEquals: { value: uuid } },
+        }),
+      );
+    }
 
-      // handle relationship dependency
-      if (dependency.relationship) {
-        // define the uuid(s) that we're establishing relationship from
-        const uuidsOrUuid = dependency.relationship.from.uuid(execution);
-        const uuids = Array.isArray(uuidsOrUuid) ? uuidsOrUuid : [uuidsOrUuid];
+    // handle relationship dependency
+    if (dependency.relationship) {
+      // define the uuid(s) that we're establishing relationship from
+      const uuidsOrUuid = dependency.relationship.from.uuid(execution);
+      const uuids = Array.isArray(uuidsOrUuid) ? uuidsOrUuid : [uuidsOrUuid];
 
-        // determine if the relationship is defined via the source table or target table
-        const viaSourceDobj =
-          dependency.relationship.via.dobj ===
-          dependency.relationship.from.dobj;
+      // determine if the relationship is defined via the source table or target table
+      const viaSourceDobj =
+        dependency.relationship.via.dobj === dependency.relationship.from.dobj;
 
-        // sanity check that the property the relationship is defined via is named in a way that makes sense (fail fast for illogical reference names)
-        const referencedDobj = viaSourceDobj
-          ? dependency.relationship.to.dobj // if the relationship is on source dobj, then the referenced one is the target dobj
-          : dependency.relationship.from.dobj; // otherwise, the referenced one must be the source dobj
-        const isAnIntuitiveReference = isPropertyNameAReferenceIntuitively({
-          propertyName: dependency.relationship.via.prop,
-          domainObjectName: referencedDobj,
+      // sanity check that the property the relationship is defined via is named in a way that makes sense (fail fast for illogical reference names)
+      const referencedDobj = viaSourceDobj
+        ? dependency.relationship.to.dobj // if the relationship is on source dobj, then the referenced one is the target dobj
+        : dependency.relationship.from.dobj; // otherwise, the referenced one must be the source dobj
+      const isAnIntuitiveReference = isPropertyNameAReferenceIntuitively({
+        propertyName: dependency.relationship.via.prop,
+        domainObjectName: referencedDobj,
+      });
+      if (!isAnIntuitiveReference)
+        throw new DependencyRelationshipViaUnintuitivePropertyNameError({
+          relationship: dependency.relationship,
+          referencedDobj,
         });
-        if (!isAnIntuitiveReference)
-          throw new DependencyRelationshipViaUnintuitivePropertyNameError({
-            relationship: dependency.relationship,
-            referencedDobj,
-          });
 
-        // define the dependency pointers for each uuid
-        return uuids.map((uuid) =>
-          defineDependencyPointerKey({
-            dobj: dependency.relationship.via.dobj,
-            property: dependency.relationship.via.prop,
-            specifier: viaSourceDobj
-              ? { propertyOf: { uuid } }
-              : { propertyEquals: { value: uuid } },
-          }),
-        );
-      }
+      // define the dependency pointers for each uuid
+      return uuids.map((uuid) =>
+        defineDependencyPointerKey({
+          dobj: dependency.relationship.via.dobj,
+          property: dependency.relationship.via.prop,
+          specifier: viaSourceDobj
+            ? { propertyOf: { uuid } }
+            : { propertyEquals: { value: uuid } },
+        }),
+      );
+    }
 
-      // throw error if unsupported
-      throw new UnexpectedCodePathError('unsupported dependency specified');
-    })
-    .flat();
+    // throw error if unsupported
+    throw new UnexpectedCodePathError('unsupported dependency specified');
+  });
 
   // return the pointers
   return pointers;

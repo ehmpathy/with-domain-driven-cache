@@ -1,6 +1,6 @@
 import { DomainEntity } from 'domain-objects';
 import { getSimpleLambdaClientCacheKey } from 'simple-lambda-client';
-import { SimpleAsyncCache } from 'with-simple-cache';
+import type { SimpleAsyncCache } from 'with-simple-cache';
 
 import { uuid } from '../deps';
 import { ref } from './ref/ref';
@@ -24,7 +24,7 @@ class Container extends DomainEntity<Container> implements Container {
   public static unique = ['icid'];
 }
 
-const getShipOfContainer = async ({}: {
+const getShipOfContainer = async (_: {
   containerUuid: string;
 }): Promise<{ ship: Ship }> => {
   const ship = new Ship({
@@ -38,9 +38,9 @@ const getShipOfContainer = async ({}: {
 describe('withQueryCaching', () => {
   const exampleStore: Record<string, any> = {};
   const cacheGetMock = jest.fn(async (key) => exampleStore[key]);
-  const cacheSetMock = jest.fn(
-    async (key, value) => (exampleStore[key] = value),
-  );
+  const cacheSetMock = jest.fn(async (key, value) => {
+    exampleStore[key] = value;
+  });
   const cache: SimpleAsyncCache<string> = {
     get: cacheGetMock,
     set: cacheSetMock,
@@ -221,7 +221,7 @@ describe('withQueryCaching', () => {
       expect(cacheSetMock).toHaveBeenCalledWith(
         expect.any(String),
         expect.any(String),
-        { secondsUntilExpiration: 1 },
+        { expiration: { seconds: 1 } },
       );
     });
     it('should skip cache.set if output was marked invalid', async () => {

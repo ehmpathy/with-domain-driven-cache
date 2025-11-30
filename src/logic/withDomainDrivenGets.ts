@@ -3,8 +3,8 @@ import {
   withDenormalization,
   withSerialization,
 } from 'with-cache-normalization';
-import { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
-import { SimpleAsyncCache, SimpleCache } from 'with-simple-cache';
+import type { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
+import type { SimpleAsyncCache, SimpleCache } from 'with-simple-cache';
 
 /**
  * a method which makes it easy to get from a domain-driven cache, without access to the query logic itself

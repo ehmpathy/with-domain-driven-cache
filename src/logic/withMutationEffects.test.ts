@@ -1,5 +1,5 @@
 import { DomainEntity, DomainLiteral } from 'domain-objects';
-import { SimpleAsyncCache } from 'with-simple-cache';
+import type { SimpleAsyncCache } from 'with-simple-cache';
 
 import { ref } from './ref/ref';
 import { withMutationEffects } from './withMutationEffects';
@@ -75,9 +75,9 @@ const addContainerToShip = async ({
 describe('withMutationEffects', () => {
   const exampleStore: Record<string, any> = {};
   const cacheGetMock = jest.fn(async (key) => exampleStore[key]);
-  const cacheSetMock = jest.fn(
-    async (key, value) => (exampleStore[key] = value),
-  );
+  const cacheSetMock = jest.fn(async (key, value) => {
+    exampleStore[key] = value;
+  });
   const cache: SimpleAsyncCache<string> = {
     get: cacheGetMock,
     set: cacheSetMock,

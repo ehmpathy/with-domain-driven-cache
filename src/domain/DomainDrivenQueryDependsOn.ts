@@ -1,4 +1,4 @@
-import { DomainDrivenQueryDependency } from './DomainDrivenQueryDependency';
+import type { DomainDrivenQueryDependency } from './DomainDrivenQueryDependency';
 
 /**
  * defines all of the dependencies of a domain.logic.query

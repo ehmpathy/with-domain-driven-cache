@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`withMutationEffects should check for queries to invalidate for all domain objects referenced in outputs 1`] = `
 [
@@ -88,56 +88,70 @@ exports[`withMutationEffects should produce query invalidations for all the doma
     ".query.dep.Container.uuid.__containeruuid__.41a9e6b0c8ab54ff319a9a1551e51a0045cd2f91a5ab2476e4995e47d2fb1d6d",
     "{"queries":["[{\\"containerUuid\\":\\"__container.uuid__\\",\\"shipUuid\\":\\"__ship.uuid__\\"}]"]}",
     {
-      "secondsUntilExpiration": Infinity,
+      "expiration": {
+        "seconds": Infinity,
+      },
     },
   ],
   [
     ".query.dep.Container.onShipUuid.__shipuuid__.11a185c00351c263db81a13d211b0fe9e2f039f30b467d8426e8bd1ea9e74a85",
     "{"queries":["[{\\"containerUuid\\":\\"__container.uuid__\\",\\"shipUuid\\":\\"__ship.uuid__\\"}]"]}",
     {
-      "secondsUntilExpiration": Infinity,
+      "expiration": {
+        "seconds": Infinity,
+      },
     },
   ],
   [
     ".query.dep.Container.uuid.__container.uuid__.insuredCargoUuids",
     "{"queries":["[{\\"containerUuid\\":\\"__container.uuid__\\",\\"shipUuid\\":\\"__ship.uuid__\\"}]"]}",
     {
-      "secondsUntilExpiration": Infinity,
+      "expiration": {
+        "seconds": Infinity,
+      },
     },
   ],
   [
     "[{"containerUuid":"__container.uuid__","shipUuid":"__ship.uuid__"}]",
     "{"container":".cache.ref.Container.__container.icid__.317f6449a26907227ea8de349c480310628297c300c6586e97ca8706f861c7d1","ship":".cache.ref.Ship.__ship.isid__.0b689f94a3c7d857f5587801814a875598b4dfd25e9d836887a968556c9763f8"}",
     {
-      "secondsUntilExpiration": undefined,
+      "expiration": undefined,
     },
   ],
   [
     ".cache.ref.Container.__container.icid__.317f6449a26907227ea8de349c480310628297c300c6586e97ca8706f861c7d1",
     "{"uuid":"__container.uuid__","icid":"__container.icid__","manufacturer":"containers r us","onShipUuid":"__ship.uuid__","insuredCargoUuids":["__insured.cargo.1__","__insured.cargo.2__"],"lock":{"manufacturer":"swiper no swiping","model":"locky mclockface"}}",
     {
-      "secondsUntilExpiration": 2592000,
+      "expiration": {
+        "seconds": 2592000,
+      },
     },
   ],
   [
     ".cache.ref.Ship.__ship.isid__.0b689f94a3c7d857f5587801814a875598b4dfd25e9d836887a968556c9763f8",
     "{"uuid":"__ship.uuid__","isid":"__ship.isid__","name":"boaty mcboatface"}",
     {
-      "secondsUntilExpiration": 2592000,
+      "expiration": {
+        "seconds": 2592000,
+      },
     },
   ],
   [
     ".cache.ref.Container.__container.icid__.317f6449a26907227ea8de349c480310628297c300c6586e97ca8706f861c7d1",
     "{"uuid":"__container.uuid__","icid":"__container.icid__","manufacturer":"containers r us","onShipUuid":"__ship.uuid__","insuredCargoUuids":["__insured.cargo.1__","__insured.cargo.2__"],"lock":{"manufacturer":"swiper no swiping","model":"locky mclockface"}}",
     {
-      "secondsUntilExpiration": 2592000,
+      "expiration": {
+        "seconds": 2592000,
+      },
     },
   ],
   [
     ".cache.ref.Ship.__ship.isid__.0b689f94a3c7d857f5587801814a875598b4dfd25e9d836887a968556c9763f8",
     "{"uuid":"__ship.uuid__","isid":"__ship.isid__","name":"boaty mcboatface"}",
     {
-      "secondsUntilExpiration": 2592000,
+      "expiration": {
+        "seconds": 2592000,
+      },
     },
   ],
 ]

@@ -4,8 +4,8 @@ import {
   getUniqueIdentifierSlug,
 } from 'domain-objects';
 import { asHashSha256Sync } from 'hash-fns';
-import { PickOne } from 'type-fns';
-import { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
+import type { PickOne } from 'type-fns';
+import type { SerializableObject } from 'with-cache-normalization/dist/domain/NormalizeCacheValueMethod';
 
 const serializePropertyValue = (value: SerializableObject) => {
   // if it is a domain object, get its unique identifier
@@ -16,7 +16,7 @@ const serializePropertyValue = (value: SerializableObject) => {
   // otherwise, must use JSON.stringify, to avoid getting things like `[ Object: object ]`; however, must be filePathSafe, so hash and include human part
   const humanPart = JSON.stringify(value)
     .replace(/:/g, '.')
-    .replace(/[^\w\-\_]/g, '')
+    .replace(/[^\w\-_]/g, '')
     .replace(/\.\./g, '.');
   const uniquePart = asHashSha256Sync(JSON.stringify(value)); // part to guarantee uniqueness
   return [humanPart, uniquePart].join('.');
