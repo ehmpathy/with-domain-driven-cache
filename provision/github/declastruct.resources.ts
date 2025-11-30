@@ -35,7 +35,7 @@ export const getResources = async (): Promise<DomainEntity<any>[]> => {
   // declare the repo
   const repo = DeclaredGithubRepo.as({
     owner: 'ehmpathy',
-    name: 'with-domain-driven-caching',
+    name: 'with-domain-driven-cache',
     description: (pkg as any).description ?? null,
     visibility: (pkg as any).private === true ? 'private' : 'public',
     private: (pkg as any).private ?? false, // todo: why do we have to specify this twice?

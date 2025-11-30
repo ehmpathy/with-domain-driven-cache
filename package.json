@@ -1,10 +1,10 @@
 {
-  "name": "with-domain-driven-caching",
+  "name": "with-domain-driven-cache",
   "author": "ehmpathy",
   "description": "A wrapper that makes it simple to add caching to any function",
   "version": "1.1.4",
-  "repository": "ehmpathy/with-domain-driven-caching",
-  "homepage": "https://github.com/ehmpathy/with-domain-driven-caching",
+  "repository": "ehmpathy/with-domain-driven-cache",
+  "homepage": "https://github.com/ehmpathy/with-domain-driven-cache",
   "keywords": [
     "cache",
     "wrapper",
@@ -18,7 +18,7 @@
     "simple",
     "simple cache"
   ],
-  "bugs": "https://github.com/ehmpathy/with-domain-driven-caching/issues",
+  "bugs": "https://github.com/ehmpathy/with-domain-driven-cache/issues",
   "license": "MIT",
   "main": "dist/index.js",
   "engines": {

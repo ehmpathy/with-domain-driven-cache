@@ -9,7 +9,7 @@ import {
 import { uuid } from '../deps';
 import { ref } from './ref/ref';
 import { withMutationEffects } from './withMutationEffects';
-import { withQueryCaching } from './withQueryCaching';
+import { withQueryCache } from './withQueryCache';
 
 interface Ship {
   uuid: string;
@@ -67,8 +67,8 @@ const cache = createCache({
   directory: { mounted: { path: `${__dirname}/__tmp__` } },
 });
 
-describe('withQueryCaching', () => {
-  const getShipOfContainerWithCaching = withQueryCaching(getShipOfContainer, {
+describe('withQueryCache', () => {
+  const getShipOfContainerWithCache = withQueryCache(getShipOfContainer, {
     cache,
     serialize: {
       key: (event) =>
@@ -92,7 +92,7 @@ describe('withQueryCaching', () => {
       },
     ],
   });
-  const getContainersOnShipWithCaching = withQueryCaching(getContainersOnShip, {
+  const getContainersOnShipWithCache = withQueryCache(getContainersOnShip, {
     cache,
     serialize: {
       key: (event) =>
@@ -116,7 +116,7 @@ describe('withQueryCaching', () => {
       },
     ],
   });
-  const updateFuelOfShipWithCaching = withMutationEffects(
+  const updateFuelOfShipWithCache = withMutationEffects(
     async ({
       shipUuid,
       newFuelQuantity,
@@ -134,7 +134,7 @@ describe('withQueryCaching', () => {
     },
     { cache },
   );
-  const addContainerToShipWithCaching = withMutationEffects(
+  const addContainerToShipWithCache = withMutationEffects(
     async ({
       containerUuid,
       shipUuid,
@@ -156,7 +156,7 @@ describe('withQueryCaching', () => {
   describe('feature: cache', () => {
     it('should be able to successfully cache data', async () => {
       // run the query
-      const { ship } = await getShipOfContainerWithCaching({
+      const { ship } = await getShipOfContainerWithCache({
         containerUuid: uuid(),
       });
       expect(ship.uuid).toBeDefined();
@@ -170,12 +170,12 @@ describe('withQueryCaching', () => {
     it('should produce equivalent output on cache.hit as on cache.miss', async () => {
       const containerUuid = uuid();
       // run the cache.miss
-      const result1 = await getShipOfContainerWithCaching({
+      const result1 = await getShipOfContainerWithCache({
         containerUuid,
       });
 
       // run the cache.hit
-      const result2 = await getShipOfContainerWithCaching({
+      const result2 = await getShipOfContainerWithCache({
         containerUuid,
       });
 
@@ -188,18 +188,18 @@ describe('withQueryCaching', () => {
       const containerUuid = uuid();
 
       // get the result before the mutation
-      const resultBefore = await getShipOfContainerWithCaching({
+      const resultBefore = await getShipOfContainerWithCache({
         containerUuid,
       });
 
       // run the mutation
-      await updateFuelOfShipWithCaching({
+      await updateFuelOfShipWithCache({
         shipUuid: resultBefore.ship.uuid,
         newFuelQuantity: 821,
       });
 
       // get the result after the mutation
-      const resultAfter = await getShipOfContainerWithCaching({
+      const resultAfter = await getShipOfContainerWithCache({
         containerUuid,
       });
 
@@ -216,18 +216,18 @@ describe('withQueryCaching', () => {
       const shipUuid = uuid();
 
       // get the result before the mutation
-      const resultBefore = await getContainersOnShipWithCaching({
+      const resultBefore = await getContainersOnShipWithCache({
         shipUuid,
       });
 
       // run the mutation
-      await addContainerToShipWithCaching({
+      await addContainerToShipWithCache({
         containerUuid: uuid(),
         shipUuid,
       });
 
       // get the result after the mutation
-      const resultAfter = await getContainersOnShipWithCaching({
+      const resultAfter = await getContainersOnShipWithCache({
         shipUuid,
       });
 
@@ -238,18 +238,18 @@ describe('withQueryCaching', () => {
       const shipUuid = uuid();
 
       // get the result before the mutation
-      const resultBefore = await getContainersOnShipWithCaching({
+      const resultBefore = await getContainersOnShipWithCache({
         shipUuid,
       });
 
       // run the mutation
-      await addContainerToShipWithCaching({
+      await addContainerToShipWithCache({
         containerUuid: resultBefore.containers[0]!.uuid, // same container -> no change
         shipUuid,
       });
 
       // get the result after the mutation
-      const resultAfter = await getContainersOnShipWithCaching({
+      const resultAfter = await getContainersOnShipWithCache({
         shipUuid,
       });
 

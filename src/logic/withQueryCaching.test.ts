@@ -4,7 +4,7 @@ import type { SimpleAsyncCache } from 'with-simple-cache';
 
 import { uuid } from '../deps';
 import { ref } from './ref/ref';
-import { withQueryCaching } from './withQueryCaching';
+import { withQueryCache } from './withQueryCache';
 
 interface Ship {
   uuid: string;
@@ -35,7 +35,7 @@ const getShipOfContainer = async (_: {
   return { ship };
 };
 
-describe('withQueryCaching', () => {
+describe('withQueryCache', () => {
   const exampleStore: Record<string, any> = {};
   const cacheGetMock = jest.fn(async (key) => exampleStore[key]);
   const cacheSetMock = jest.fn(async (key, value) => {
@@ -47,7 +47,7 @@ describe('withQueryCaching', () => {
   };
 
   const logDebugMock = jest.fn();
-  const getShipOfContainerWithCaching = withQueryCaching(getShipOfContainer, {
+  const getShipOfContainerWithCache = withQueryCache(getShipOfContainer, {
     cache,
     logDebug: logDebugMock,
     dependsOn: [
@@ -72,7 +72,7 @@ describe('withQueryCaching', () => {
       const containerUuid = uuid();
 
       // call the method
-      await getShipOfContainerWithCaching({
+      await getShipOfContainerWithCache({
         containerUuid,
       });
 
@@ -91,8 +91,8 @@ describe('withQueryCaching', () => {
       const containerUuid = uuid();
 
       // define query with custom key serialization
-      const getShipOfContainerWithCachingAndCustomKeySerialization =
-        withQueryCaching(getShipOfContainer, {
+      const getShipOfContainerWithCacheAndCustomKeySerialization =
+        withQueryCache(getShipOfContainer, {
           cache,
           serialize: {
             key: (input) =>
@@ -107,7 +107,7 @@ describe('withQueryCaching', () => {
         });
 
       // call the method
-      await getShipOfContainerWithCachingAndCustomKeySerialization({
+      await getShipOfContainerWithCacheAndCustomKeySerialization({
         containerUuid,
       });
 
@@ -130,7 +130,7 @@ describe('withQueryCaching', () => {
   });
   describe('cache.miss', () => {
     it('should set to the cache with normalization and dependency pointers', async () => {
-      await getShipOfContainerWithCaching({
+      await getShipOfContainerWithCache({
         containerUuid: uuid(),
       });
 
@@ -139,7 +139,7 @@ describe('withQueryCaching', () => {
       expect(cache.set).toHaveBeenCalledTimes(3); // $query.ref, $cache.ref, query.output
     });
     it('should log the cache.miss and the cache.set if logDebug method was specified', async () => {
-      await getShipOfContainerWithCaching({
+      await getShipOfContainerWithCache({
         containerUuid: uuid(),
       });
 
@@ -164,31 +164,31 @@ describe('withQueryCaching', () => {
       expect(uncachedResult2).not.toEqual(uncachedResult1);
 
       // prove that calling the cached function gives the same uuids each time for same input
-      const cachedResult1 = await getShipOfContainerWithCaching({
+      const cachedResult1 = await getShipOfContainerWithCache({
         containerUuid,
       });
-      const cachedResult2 = await getShipOfContainerWithCaching({
+      const cachedResult2 = await getShipOfContainerWithCache({
         containerUuid,
       });
       expect(cachedResult2).toEqual(cachedResult1);
     });
     it('should get the same value as original from cache get', async () => {
       const containerUuid = uuid();
-      const cachedResult1 = await getShipOfContainerWithCaching({
+      const cachedResult1 = await getShipOfContainerWithCache({
         containerUuid,
       });
-      const cachedResult2 = await getShipOfContainerWithCaching({
+      const cachedResult2 = await getShipOfContainerWithCache({
         containerUuid,
       });
       expect(cachedResult2).toEqual(cachedResult1);
     });
     it('should log the cache.hit if logDebug method was specified', async () => {
       const containerUuid = uuid();
-      await getShipOfContainerWithCaching({
+      await getShipOfContainerWithCache({
         containerUuid,
       });
       jest.clearAllMocks();
-      await getShipOfContainerWithCaching({
+      await getShipOfContainerWithCache({
         containerUuid,
       });
 
@@ -202,7 +202,7 @@ describe('withQueryCaching', () => {
   describe('options', () => {
     it('should respect seconds until expiration', async () => {
       // define method w/ default expiration of 1 second
-      const getShipOfContainerWithCachingAndCustomExpiration = withQueryCaching(
+      const getShipOfContainerWithCacheAndCustomExpiration = withQueryCache(
         getShipOfContainer,
         {
           cache,
@@ -212,7 +212,7 @@ describe('withQueryCaching', () => {
       );
 
       // make a cache.miss call
-      await getShipOfContainerWithCachingAndCustomExpiration({
+      await getShipOfContainerWithCacheAndCustomExpiration({
         containerUuid: uuid(),
       });
 
@@ -226,7 +226,7 @@ describe('withQueryCaching', () => {
     });
     it('should skip cache.set if output was marked invalid', async () => {
       // define method w/ invalidation option
-      const getShipOfContainerWithCachingAndCustomValidity = withQueryCaching(
+      const getShipOfContainerWithCacheAndCustomValidity = withQueryCache(
         getShipOfContainer,
         {
           cache,
@@ -236,13 +236,13 @@ describe('withQueryCaching', () => {
       );
 
       // prove that it did not set to cache for rando uuid
-      await getShipOfContainerWithCachingAndCustomValidity({
+      await getShipOfContainerWithCacheAndCustomValidity({
         containerUuid: uuid(),
       });
       expect(cacheSetMock).toHaveBeenCalledTimes(0);
 
       // prove that it did  set to cache for the specific input we said was valid
-      await getShipOfContainerWithCachingAndCustomValidity({
+      await getShipOfContainerWithCacheAndCustomValidity({
         containerUuid: '__valid_uuid__',
       });
       expect(cacheSetMock).toHaveBeenCalledTimes(2);

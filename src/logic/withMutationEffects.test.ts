@@ -3,7 +3,7 @@ import type { SimpleAsyncCache } from 'with-simple-cache';
 
 import { ref } from './ref/ref';
 import { withMutationEffects } from './withMutationEffects';
-import { withQueryCaching } from './withQueryCaching';
+import { withQueryCache } from './withQueryCache';
 
 interface Ship {
   uuid: string;
@@ -82,7 +82,7 @@ describe('withMutationEffects', () => {
     get: cacheGetMock,
     set: cacheSetMock,
   };
-  const getContainerAndShipWithCaching = withQueryCaching(addContainerToShip, {
+  const getContainerAndShipWithCache = withQueryCache(addContainerToShip, {
     cache,
     dependsOn: [
       // add a bunch of dependencies -> get a bunch of dependency pointers
@@ -143,7 +143,7 @@ describe('withMutationEffects', () => {
     const shipUuid = '__ship.uuid__';
 
     // get the container and ship with caching, to set some dependency pointers into the cache
-    await getContainerAndShipWithCaching({
+    await getContainerAndShipWithCache({
       containerUuid,
       shipUuid,
     });

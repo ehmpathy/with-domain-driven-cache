@@ -23,7 +23,7 @@ export const DEFAULT_REFERENCE_SECONDS_UNTIL_EXPIRATION = 30 * 24 * 60 * 60; // 
  * note
  * - ⚠️ ensure all of the domain.object relationships and identities your domain.logic.query depends on are explicitly defined via the `dependsOn` attribute, to activate automated cache invalidation
  */
-export const withQueryCaching = <I extends any[], O extends SerializableObject>(
+export const withQueryCache = <I extends any[], O extends SerializableObject>(
   logic: (...args: I) => Promise<O>,
   options: {
     /**
