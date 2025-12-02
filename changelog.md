@@ -1,6 +1,13 @@
 # Changelog
 
 <<<<<<< Updated upstream
+## [1.1.5](https://github.com/ehmpathy/with-domain-driven-cache/compare/v1.1.4...v1.1.5) (2025-11-30)
+
+
+### Bug Fixes
+
+* **pkg:** caching -&gt; cache; elim gerunds ([#9](https://github.com/ehmpathy/with-domain-driven-cache/issues/9)) ([4bff3cf](https://github.com/ehmpathy/with-domain-driven-cache/commit/4bff3cf899f8972533b6e2caef05c3ea2058b89f))
+
 ## [1.1.4](https://github.com/ehmpathy/with-domain-driven-caching/compare/v1.1.3...v1.1.4) (2025-11-30)
 
 
